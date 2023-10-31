@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "essence-extractor"
+version = "0.1.0"
+description = "Unleash the power of content transformation with EssenceExtractor, a dynamic tool that turbocharges your workflow, turning YouTube videos into engaging, readable blog posts in a snap!"
+authors = ["Jurik-001"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytube = "^15.0.0"
+notebook = "^7.0.6"
+moviepy = "^1.0.3"
+speechrecognition = "^3.10.0"
+langchain = "^0.0.325"
+python-dotenv = "^1.0.0"
+gptcache = "^0.1.42"
+openai = "^0.28.1"
+openai-whisper = { git = "https://github.com/openai/whisper.git" }
+soundfile = "^0.12.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.10.1"
+ruff = "^0.1.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 90
+
+[tool.ruff]
+line-length = 90
+select = [
+    "E", # Pycodestyle errors: These are coding standard errors found by Pycodestyle (formerly known as Pep8).
+    "I", # Isort errors: Issues related to import formatting.
+    "D", # Pydocstyle errors: Docstring style issues.
+    "COM", # Flake8-commas errors: Issues related to commas (e.g., missing trailing commas).
+]
+ignore = [
+  "D107",  # Missing docstring in __init__
+]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.poetry.scripts]
+format = "black ."
