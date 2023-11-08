@@ -17,6 +17,10 @@ gptcache = "^0.1.42"
 openai = "^0.28.1"
 openai-whisper = { git = "https://github.com/openai/whisper.git" }
 soundfile = "^0.12.1"
+pytesseract = "^0.3.10"
+sentence-transformers = "^2.2.2"
+faiss-cpu = "^1.7.4"
+tiktoken = "^0.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

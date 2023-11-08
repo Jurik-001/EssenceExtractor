@@ -7,6 +7,7 @@ from src import utils
 from src.blog_generator import BlogGenerator
 from src.downloader import YouTubeDownloader
 from src.transcriber import Transcriber
+from src.image_extractor import ImageExtractor
 
 
 def main(output_dir, api_key):
@@ -20,6 +21,8 @@ def main(output_dir, api_key):
     yt_downloader = YouTubeDownloader(output_path=output_dir)
     transcriber = Transcriber(output_path=output_dir)
     blog_generator = BlogGenerator(output_path=output_dir)
+    image_path = os.path.join(output_dir, "images")
+    image_extractor = ImageExtractor(output_path=image_path)
 
     url = input("Please enter the YouTube video URL: ")
 
@@ -32,8 +35,16 @@ def main(output_dir, api_key):
     transcription_path = transcriber.transcribe_audio(audio_path)
     utils.logging.info(f"Audio transcribed to: {transcription_path}")
 
-    blog_path = blog_generator.generate_blog(transcription_path)
-    utils.logging.info(f"Blog post generated to: {blog_path}")
+    blog_content = blog_generator.generate_blog(transcription_path)
+    utils.logging.info(f"Blog post generated")
+
+    blog_content = image_extractor.add_images_to_blog(video_path, blog_content)
+    utils.logging.info(f"Images added to blog post")
+
+    blog_post_path = os.path.join(
+        output_dir, f"{os.path.basename(video_path)}.md",
+    )
+    utils.save_to_md_file(blog_content, blog_post_path)
 
 
 if __name__ == "__main__":
