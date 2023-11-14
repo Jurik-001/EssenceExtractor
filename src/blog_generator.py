@@ -58,7 +58,7 @@ class BlogGenerator:
             ValueError: If the total token count exceeds MAX_CONTENT_LENGTH.
         """
         input_text = self._read_text_file(text_file_path)
-        system_message_content = "You're a tech blog writer. And write blog entries using markedown, like header and lists."
+        system_message_content = "You're a tech blog writer. And write blog entries using markedown and placing images using [image] tag."
         token_count = self._count_tokens(system_message_content) + self._count_tokens(
             input_text,
         )

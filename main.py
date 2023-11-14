@@ -41,8 +41,10 @@ def main(output_dir, api_key):
     blog_content = image_extractor.add_images_to_blog(video_path, blog_content)
     utils.logging.info(f"Images added to blog post")
 
+    blog_post_name = video_path.replace(".mp4", "")
+
     blog_post_path = os.path.join(
-        output_dir, f"{os.path.basename(video_path)}.md",
+        output_dir, f"{os.path.basename(blog_post_name)}.md",
     )
     utils.save_to_md_file(blog_content, blog_post_path)
 

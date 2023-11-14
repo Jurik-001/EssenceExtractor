@@ -107,9 +107,9 @@ class ImageExtractor:
 
         return headlines_images
 
-    def _remove_unused_images(self, image_placeholder_queries):
+    def _remove_unused_images(self, keep_image_names):
         for img_name in os.listdir(self.output_path):
-            if img_name not in image_placeholder_queries.keys():
+            if img_name not in keep_image_names:
                 os.remove(os.path.join(self.output_path, img_name))
 
     def add_images_to_blog(self, video_file_path, blog_content):
@@ -137,12 +137,19 @@ class ImageExtractor:
 
         index = self._create_index(embeddings)
 
+        used_images = []
+
         for headline, img_tag in image_placeholder_queries.items():
             query = self._embed_text(headline)
             query = query.reshape(1, -1)
             retrieved_image_name = self._query_index(index, query, images_text_dict, k=1)[0]
-            blog_content = blog_content.replace(img_tag, f"![{headline}]({retrieved_image_name})")
+            used_images.append(retrieved_image_name)
+            image_path = os.path.join(self.output_path, retrieved_image_name)
+            blog_content = blog_content.replace(img_tag, f"![{retrieved_image_name}]({image_path})")
 
-        self._remove_unused_images(image_placeholder_queries)
+        print("=====================================")
+        print(used_images)
+        print("=====================================")
+        self._remove_unused_images(used_images)
 
         return blog_content
