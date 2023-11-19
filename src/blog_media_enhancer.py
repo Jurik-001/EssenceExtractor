@@ -17,11 +17,13 @@ class BlogMediaEnhancer:
     """Adds images to a blog post based on the content of the blog post."""
     def __init__(self, output_path='images'):
         self.output_path = output_path
+        self.image_dir_name = 'images'
+        self.image_output_path = os.path.join(output_path, self.image_dir_name)
         self.model = SentenceTransformer(
             'sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
         )
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
+        if not os.path.exists(self.image_output_path):
+            os.makedirs(self.image_output_path)
 
     def _extract_images(self, video_file_path, interval=10):
         """Extracts images from the video at the specified interval.
@@ -33,8 +35,8 @@ class BlogMediaEnhancer:
         Returns:
             List[str]: A list of paths to the extracted images.
         """
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
+        if not os.path.exists(self.image_output_path):
+            os.makedirs(self.image_output_path)
 
         video = VideoFileClip(video_file_path)
         duration = video.duration
@@ -43,7 +45,7 @@ class BlogMediaEnhancer:
         for i in range(0, math.ceil(duration), interval):
             frame = video.get_frame(i)
             frame_image_filename = f'frame_at_{i}_seconds.png'
-            frame_image_path = os.path.join(self.output_path, frame_image_filename)
+            frame_image_path = os.path.join(self.image_output_path, frame_image_filename)
             video.save_frame(frame_image_path, t=i)
             extracted_images[frame_image_filename] = frame
 
@@ -146,9 +148,9 @@ class BlogMediaEnhancer:
         Args:
             keep_image_names (List[str]): A list of image names to keep.
         """
-        for img_name in os.listdir(self.output_path):
+        for img_name in os.listdir(self.image_output_path):
             if img_name not in keep_image_names:
-                os.remove(os.path.join(self.output_path, img_name))
+                os.remove(os.path.join(self.image_output_path, img_name))
 
     def add_images_to_blog(self, video_file_path, blog_content):
         """Adds the images to the blog content.
@@ -183,7 +185,7 @@ class BlogMediaEnhancer:
                 index, query, images_text_dict, k=1,
             )[0]
             used_images.append(retrieved_image_name)
-            image_path = os.path.join(self.output_path, retrieved_image_name)
+            image_path = os.path.join(self.image_dir_name, retrieved_image_name)
             blog_content = blog_content.replace(
                 img_tag, f"![{retrieved_image_name}]({image_path})",
             )
