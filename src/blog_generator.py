@@ -38,13 +38,7 @@ class BlogGenerator:
         token_count = len(self.encoding.encode(text))
         return token_count
 
-    def _matches_token_size(self, token_count):
-        if token_count > MODEL_TOKEN_LENGTH_MAPPING[self.model_name]:
-            return False
-        return True
-
     def format_to_markdown(self, text):
-        # TODO move to utils?
         lines = text.split("\\n")
 
         formatted_lines = []
@@ -106,32 +100,26 @@ class BlogGenerator:
         """
         input_text = self._read_text_file(text_file_path)
         system_message = "Your role is creating one final version of a ready to publish article based on transcript. Write the article with a focus on educating the reader and a captivating introduction, body, and a concise conclusion, use markdown and placing images using [image] tag.\n"
-        input_text_length = self._count_tokens(input_text)
         system_msg_length = self._count_tokens(system_message)
 
-        if self._matches_token_size(system_msg_length + input_text_length + OUTPUT_TOKEN_LENGTH_BUFFER):
-            return self._generate_answer(system_message, input_text)
-        else:
-            utils.logging.info(f"The total token count exceeds {MODEL_TOKEN_LENGTH_MAPPING[self.model_name]}, long format support will be used.")
-            user_msg_length = self._count_tokens(self.create_refine_prompt("", ""))
+        user_msg_length = self._count_tokens(self.create_refine_prompt("", ""))
+        chunk_size = MODEL_TOKEN_LENGTH_MAPPING[
+                         self.model_name] - system_msg_length - user_msg_length - OUTPUT_TOKEN_LENGTH_BUFFER
+
+        blog_post = ""
+        while input_text:
+            utils.logging.info(f"Chunk size: {chunk_size}")
+            chunk = self.split_into_first_chunk(input_text, chunk_size)
+            user_message = self.create_refine_prompt(blog_post, chunk)
+
+            blog_post = self._generate_answer(system_message, user_message)
+            utils.logging.info(f"Blog post: {blog_post}")
+            blog_post_length = self._count_tokens(blog_post)
+            utils.logging.info(f"Blog post token count: {blog_post_length}")
+
             chunk_size = MODEL_TOKEN_LENGTH_MAPPING[
-                             self.model_name] - system_msg_length - user_msg_length - OUTPUT_TOKEN_LENGTH_BUFFER
+                             self.model_name] - system_msg_length - user_msg_length - blog_post_length - OUTPUT_TOKEN_LENGTH_BUFFER
+            input_text = input_text.replace(chunk, "")
+            utils.logging.info(f"Remaining token count: {self._count_tokens(input_text)}")
 
-            blog_post = ""
-            while input_text:
-                utils.logging.info(f"Chunk size: {chunk_size}")
-                chunk = self.split_into_first_chunk(input_text, chunk_size)
-                user_message = self.create_refine_prompt(blog_post, chunk)
-                # TODO remove chunk from input_text, overtime it will get smaller and smaller
-                # TODO make chunking dynamic, so always full context window is used
-
-                blog_post = self._generate_answer(system_message, user_message)
-                utils.logging.info(f"Blog post: {blog_post}")
-                blog_post_length = self._count_tokens(blog_post)
-                utils.logging.info(f"Blog post token count: {blog_post_length}")
-
-                chunk_size = MODEL_TOKEN_LENGTH_MAPPING[self.model_name] - system_msg_length - user_msg_length - blog_post_length - OUTPUT_TOKEN_LENGTH_BUFFER
-                input_text = input_text.replace(chunk, "")
-                utils.logging.info(f"Remaining token count: {self._count_tokens(input_text)}")
-
-            return blog_post
+        return blog_post
