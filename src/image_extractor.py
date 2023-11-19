@@ -9,7 +9,7 @@ import re
 from src import utils
 
 
-class ImageExtractor:
+class BlogMediaEnhancer:
     def __init__(self, output_path='images'):
         self.output_path = output_path
         self.model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-mpnet-base-v2')
@@ -46,6 +46,15 @@ class ImageExtractor:
         return extracted_images
 
     def _extract_text_from_image(self, img):
+        """
+        Extracts text from the given image.
+
+        Args:
+            img (PIL.Image): The image to extract text from.
+
+        Returns:
+            str: The extracted text.
+        """
         try:
             text = pytesseract.image_to_string(img)
         except Exception as e:
@@ -57,11 +66,11 @@ class ImageExtractor:
         """
         Embeds the given texts using the specified SentenceTransformer model.
 
-        Parameters:
-        - text str: The text to embed.
+        Args:
+            text (str): The text to embed.
 
         Returns:
-        A list of numpy arrays, each representing the embedded text.
+            A list of numpy arrays, each representing the embedded text.
         """
         embeddings = self.model.encode(text, show_progress_bar=True)
 
@@ -71,22 +80,43 @@ class ImageExtractor:
         """
         Creates an index for the given embeddings.
 
-        Parameters:
-        - embeddings numpy.ndarray: The embeddings to index.
+        Args:
+            embeddings (List[np.array]): The embeddings to create the index for.
 
         Returns:
-        A Faiss index.
+            A Faiss index.
         """
-        index = faiss.IndexFlatL2(embeddings.shape[1]) #maybe change to IndexFlatL2
+        index = faiss.IndexFlatL2(embeddings.shape[1])
         index.add(embeddings)
         return index
 
     def _query_index(self, index, embedded_query, images_text_dict, k=1):
+        """
+        Queries the given index with the given query.
+
+        Args:
+            index (faiss.Index): The index to query.
+            embedded_query (np.array): The query to use.
+            images_text_dict (dict): A dictionary mapping image names to their embedded text.
+            k (int): The number of results to return.
+
+        Returns:
+            List[str]: A list of image names, representing the retrieved images.
+        """
         _, retrieved_idxs = index.search(embedded_query, k=k)
         retrieved_image_names = [list(images_text_dict.keys())[idx] for idx in retrieved_idxs[0]]
         return retrieved_image_names
 
     def _extract_headlines_with_images(self, markdown_content):
+        """
+        Extracts the headlines with images from the given markdown content.
+
+        Args:
+            markdown_content (str): The markdown content to extract the headlines from.
+
+        Returns:
+            dict: A dictionary mapping headlines to their image tags.
+        """
         image_pattern = re.compile(r'!\[.*?\]\(\s*(.*?)\s*(?: ".*?")?\s*\)')
         headline_pattern = re.compile(r'^\s*(#{1,6})\s*(.*)', re.MULTILINE)
 
@@ -108,6 +138,12 @@ class ImageExtractor:
         return headlines_images
 
     def _remove_unused_images(self, keep_image_names):
+        """
+        Removes the images that are not used in the blog post.
+
+        Args:
+            keep_image_names (List[str]): A list of image names to keep.
+        """
         for img_name in os.listdir(self.output_path):
             if img_name not in keep_image_names:
                 os.remove(os.path.join(self.output_path, img_name))
@@ -129,8 +165,8 @@ class ImageExtractor:
         images_text_dict = {}
         for img_name, img in images_dict.items():
             text = self._extract_text_from_image(img)
-            embeded_text = self._embed_text(text)
-            images_text_dict[img_name] = embeded_text
+            embedded_text = self._embed_text(text)
+            images_text_dict[img_name] = embedded_text
 
         embeddings = [embedding for img_name, embedding in images_text_dict.items()]
         embeddings = np.array(embeddings)
@@ -147,9 +183,6 @@ class ImageExtractor:
             image_path = os.path.join(self.output_path, retrieved_image_name)
             blog_content = blog_content.replace(img_tag, f"![{retrieved_image_name}]({image_path})")
 
-        print("=====================================")
-        print(used_images)
-        print("=====================================")
         self._remove_unused_images(used_images)
 
         return blog_content

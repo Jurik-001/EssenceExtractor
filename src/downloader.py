@@ -32,7 +32,6 @@ class YouTubeDownloader:
             video_file_path = os.path.join(self.output_path, ys.default_filename)
 
             ys.download(self.output_path)
-            utils.logging.info(f"Video downloaded: {video_file_path}")
             return video_file_path
 
         except Exception as e:

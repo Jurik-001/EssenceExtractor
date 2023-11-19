@@ -4,6 +4,6 @@ from . import utils
 from .blog_generator import BlogGenerator
 from .downloader import YouTubeDownloader
 from .transcriber import Transcriber
-from .image_extractor import ImageExtractor
+from .image_extractor import BlogMediaEnhancer
 
-__all__ = ["YouTubeDownloader", "Transcriber", "BlogGenerator", "ImageExtractor", "utils"]
+__all__ = ["YouTubeDownloader", "Transcriber", "BlogGenerator", "BlogMediaEnhancer", "utils"]

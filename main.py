@@ -7,7 +7,7 @@ from src import utils
 from src.blog_generator import BlogGenerator
 from src.downloader import YouTubeDownloader
 from src.transcriber import Transcriber
-from src.image_extractor import ImageExtractor
+from src.image_extractor import BlogMediaEnhancer
 
 
 def main(output_dir, api_key):
@@ -22,7 +22,7 @@ def main(output_dir, api_key):
     transcriber = Transcriber(output_path=output_dir)
     blog_generator = BlogGenerator(output_path=output_dir)
     image_path = os.path.join(output_dir, "images")
-    image_extractor = ImageExtractor(output_path=image_path)
+    image_extractor = BlogMediaEnhancer(output_path=image_path)
 
     url = input("Please enter the YouTube video URL: ")
 
