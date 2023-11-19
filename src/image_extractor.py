@@ -1,24 +1,30 @@
-from moviepy.editor import VideoFileClip
+"""Adds images to a blog post based on the content of the blog post."""
+
 import math
-import pytesseract
-import numpy as np
 import os
-from sentence_transformers import SentenceTransformer
-import faiss
 import re
+
+import faiss
+import numpy as np
+import pytesseract
+from moviepy.editor import VideoFileClip
+from sentence_transformers import SentenceTransformer
+
 from src import utils
 
 
 class BlogMediaEnhancer:
+    """Adds images to a blog post based on the content of the blog post."""
     def __init__(self, output_path='images'):
         self.output_path = output_path
-        self.model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-mpnet-base-v2')
+        self.model = SentenceTransformer(
+            'sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
+        )
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
     def _extract_images(self, video_file_path, interval=10):
-        """
-        Extracts images from the video at the specified interval.
+        """Extracts images from the video at the specified interval.
 
         Args:
             video_file_path (str): The path to the video file.
@@ -46,8 +52,7 @@ class BlogMediaEnhancer:
         return extracted_images
 
     def _extract_text_from_image(self, img):
-        """
-        Extracts text from the given image.
+        """Extracts text from the given image.
 
         Args:
             img (PIL.Image): The image to extract text from.
@@ -63,8 +68,7 @@ class BlogMediaEnhancer:
         return text
 
     def _embed_text(self, text):
-        """
-        Embeds the given texts using the specified SentenceTransformer model.
+        """Embeds the given texts using the specified SentenceTransformer model.
 
         Args:
             text (str): The text to embed.
@@ -77,8 +81,7 @@ class BlogMediaEnhancer:
         return embeddings
 
     def _create_index(self, embeddings):
-        """
-        Creates an index for the given embeddings.
+        """Creates an index for the given embeddings.
 
         Args:
             embeddings (List[np.array]): The embeddings to create the index for.
@@ -91,25 +94,25 @@ class BlogMediaEnhancer:
         return index
 
     def _query_index(self, index, embedded_query, images_text_dict, k=1):
-        """
-        Queries the given index with the given query.
+        """Queries the given index with the given query.
 
         Args:
             index (faiss.Index): The index to query.
             embedded_query (np.array): The query to use.
-            images_text_dict (dict): A dictionary mapping image names to their embedded text.
+            images_text_dict (dict): A dict mapping image names to their embedded text.
             k (int): The number of results to return.
 
         Returns:
             List[str]: A list of image names, representing the retrieved images.
         """
         _, retrieved_idxs = index.search(embedded_query, k=k)
-        retrieved_image_names = [list(images_text_dict.keys())[idx] for idx in retrieved_idxs[0]]
+        retrieved_image_names = [
+            list(images_text_dict.keys())[idx] for idx in retrieved_idxs[0]
+        ]
         return retrieved_image_names
 
     def _extract_headlines_with_images(self, markdown_content):
-        """
-        Extracts the headlines with images from the given markdown content.
+        """Extracts the headlines with images from the given markdown content.
 
         Args:
             markdown_content (str): The markdown content to extract the headlines from.
@@ -138,8 +141,7 @@ class BlogMediaEnhancer:
         return headlines_images
 
     def _remove_unused_images(self, keep_image_names):
-        """
-        Removes the images that are not used in the blog post.
+        """Removes the images that are not used in the blog post.
 
         Args:
             keep_image_names (List[str]): A list of image names to keep.
@@ -149,8 +151,7 @@ class BlogMediaEnhancer:
                 os.remove(os.path.join(self.output_path, img_name))
 
     def add_images_to_blog(self, video_file_path, blog_content):
-        """
-        Adds the images to the blog content.
+        """Adds the images to the blog content.
 
         Args:
             video_file_path (str): The path to the video file.
@@ -178,10 +179,14 @@ class BlogMediaEnhancer:
         for headline, img_tag in image_placeholder_queries.items():
             query = self._embed_text(headline)
             query = query.reshape(1, -1)
-            retrieved_image_name = self._query_index(index, query, images_text_dict, k=1)[0]
+            retrieved_image_name = self._query_index(
+                index, query, images_text_dict, k=1,
+            )[0]
             used_images.append(retrieved_image_name)
             image_path = os.path.join(self.output_path, retrieved_image_name)
-            blog_content = blog_content.replace(img_tag, f"![{retrieved_image_name}]({image_path})")
+            blog_content = blog_content.replace(
+                img_tag, f"![{retrieved_image_name}]({image_path})",
+            )
 
         self._remove_unused_images(used_images)
 

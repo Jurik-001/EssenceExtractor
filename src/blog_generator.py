@@ -30,21 +30,6 @@ class BlogGenerator:
         token_count = len(self.encoding.encode(text))
         return token_count
 
-    def format_to_markdown(self, text):
-        lines = text.split("\\n")
-
-        formatted_lines = []
-
-        for line in lines:
-            if line.startswith("#"):
-                if formatted_lines:
-                    formatted_lines.append("")
-            formatted_lines.append(line)
-
-        formatted_text = "\n".join(formatted_lines)
-
-        return formatted_text
-
     def generate_blog(self, text_file_path):
         """Generate a blog post from a text file.
 
@@ -58,14 +43,18 @@ class BlogGenerator:
             ValueError: If the total token count exceeds MAX_CONTENT_LENGTH.
         """
         input_text = self._read_text_file(text_file_path)
-        system_message_content = "You're a tech blog writer. And write blog entries using markedown and placing images using [image] tag."
+        system_message_content = (
+            "You're a tech blog writer. And write blog entries using markdown "
+            "and placing images using [image] tag."
+        )
         token_count = self._count_tokens(system_message_content) + self._count_tokens(
             input_text,
         )
 
         if token_count > MAX_CONTENT_LENGTH:
             raise ValueError(
-                f"The total token count exceeds {MAX_CONTENT_LENGTH}, please reduce the text length.",
+                f"The total token count exceeds {MAX_CONTENT_LENGTH}, "
+                f"please reduce the text length.",
             )
 
         messages = [

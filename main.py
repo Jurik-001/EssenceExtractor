@@ -41,6 +41,8 @@ def main(output_dir, api_key):
     blog_content = image_extractor.add_images_to_blog(video_path, blog_content)
     utils.logging.info(f"Images added to blog post")
 
+    blog_content = utils.format_to_markdown(blog_content)
+
     blog_post_name = video_path.replace(".mp4", "")
 
     blog_post_path = os.path.join(
