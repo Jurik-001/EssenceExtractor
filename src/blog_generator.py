@@ -8,6 +8,8 @@ from langchain.schema.messages import HumanMessage, SystemMessage
 
 from src import utils
 
+MAX_CONTENT_LENGTH = 4000
+
 
 class BlogGenerator:
     """Generate a blog post from a text file."""
@@ -28,21 +30,6 @@ class BlogGenerator:
         token_count = len(self.encoding.encode(text))
         return token_count
 
-    def _format_to_markdown(self, text):
-        lines = text.split("\\n")
-
-        formatted_lines = []
-
-        for line in lines:
-            if line.startswith("#"):
-                if formatted_lines:
-                    formatted_lines.append("")
-            formatted_lines.append(line)
-
-        formatted_text = "\n".join(formatted_lines)
-
-        return formatted_text
-
     def generate_blog(self, text_file_path):
         """Generate a blog post from a text file.
 
@@ -53,17 +40,21 @@ class BlogGenerator:
             str: The path to the generated blog post.
 
         Raises:
-            ValueError: If the total token count exceeds 4000.
+            ValueError: If the total token count exceeds MAX_CONTENT_LENGTH.
         """
         input_text = self._read_text_file(text_file_path)
-        system_message_content = "You're a tech blog writer. And write blog entries using markedown, like header and lists."
+        system_message_content = (
+            "You're a tech blog writer. And write blog entries using markdown "
+            "and placing images using [image] tag."
+        )
         token_count = self._count_tokens(system_message_content) + self._count_tokens(
             input_text,
         )
 
-        if token_count > 4000:
+        if token_count > MAX_CONTENT_LENGTH:
             raise ValueError(
-                "The total token count exceeds 4000, please reduce the text length.",
+                f"The total token count exceeds {MAX_CONTENT_LENGTH}, "
+                f"please reduce the text length.",
             )
 
         messages = [
@@ -71,14 +62,4 @@ class BlogGenerator:
             HumanMessage(content=input_text),
         ]
 
-        result = self.chat.invoke(messages)
-        output_file_name = os.path.basename(text_file_path).replace(".txt", ".md")
-        output_path = self._save_to_file(result.content, output_file_name)
-        return output_path
-
-    def _save_to_file(self, content, output_file_name):
-        output_path = os.path.join(self.output_path, output_file_name)
-        with open(output_path, "w") as f:
-            f.write(content)
-        utils.logging.info(f"Blog post saved to: {output_path}")
-        return output_path
+        return self.chat.invoke(messages).content

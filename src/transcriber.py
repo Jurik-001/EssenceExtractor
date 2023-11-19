@@ -33,7 +33,6 @@ class Transcriber:
             )
 
             video_clip.write_audiofile(audio_file_path)
-            utils.logging.info(f"Audio extracted: {audio_file_path}")
             return audio_file_path
 
         except Exception as e:
@@ -60,7 +59,6 @@ class Transcriber:
 
             with open(transcription_file_path, "w") as f:
                 f.write(text)
-            utils.logging.info(f"Audio transcribed: {transcription_file_path}")
             return transcription_file_path
 
         except Exception as e:
