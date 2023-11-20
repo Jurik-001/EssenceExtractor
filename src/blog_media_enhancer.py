@@ -160,9 +160,7 @@ class BlogMediaEnhancer:
             str: The blog content with the images added.
         """
         images_dict = self._extract_images(video_file_path)
-        image_placeholder_queries = self._extract_alt_text_with_image_tags(
-            blog_content,
-        )
+        image_placeholder_queries = self._extract_alt_text_with_image_tags(blog_content)
 
         images_text_dict = {}
         for img_name, img in images_dict.items():
