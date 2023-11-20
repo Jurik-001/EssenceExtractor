@@ -134,7 +134,8 @@ class BlogGenerator:
                           "Write the article with a focus on educating the reader and"
                           "a captivating introduction, body, and a concise conclusion, "
                           "use markdown and "
-                          "placing images using ![image](path_to_image).\n")
+                          "placing images using ![...](path_to_image) "
+                          "and a meaningful alt text.\n")
         system_msg_length = self._count_tokens(system_message)
 
         user_msg_length = self._count_tokens(self._create_refine_prompt("", ""))
