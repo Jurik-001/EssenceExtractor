@@ -8,13 +8,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 pytube = "^15.0.0"
-notebook = "^7.0.6"
 moviepy = "^1.0.3"
 speechrecognition = "^3.10.0"
-langchain = "^0.0.325"
 python-dotenv = "^1.0.0"
 gptcache = "^0.1.42"
-openai = "^0.28.1"
+openai = "^1.2.4"
 openai-whisper = { git = "https://github.com/openai/whisper.git" }
 soundfile = "^0.12.1"
 pytesseract = "^0.3.10"
@@ -22,8 +20,8 @@ sentence-transformers = "^2.2.2"
 faiss-cpu = "^1.7.4"
 tiktoken = "^0.3.3"
 
-
 [tool.poetry.group.dev.dependencies]
+notebook = "^7.0.6"
 black = "^23.10.1"
 ruff = "^0.1.3"
 

@@ -3,7 +3,7 @@
 Essence Extractor is a dynamic tool designed to transform YouTube videos into engaging and concise blog posts. 🎥➡️📄 This utility automates the process of downloading videos, extracting audio, transcribing speech, and generating a summary to create a ready-to-publish blog post.
 
 ## Limitations ⚠️
-- Essence Extractor currently only works with videos between 15 and 20 minutes long.
+- Due to the nature of llm, results may vary.
 
 ## Requirements 🛠️
 In addition to the dependencies listed in `pyproject.toml`, this project requires:
@@ -53,6 +53,7 @@ Running Essence Extractor will populate your output directory with:
 - **Video File**: The original YouTube video, downloaded for reference.
 - **Audio File**: The extracted audio from the video.
 - **Transcription File**: A text file with everything that was said in the video.
+- **Images Directory**: A directory containing all the images used in the blog post.
 - **Blog Post File**: Your brand new blog post, ready for the world to see.
 
 ## Join the Essence Extractor Community 🤝
