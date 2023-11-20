@@ -5,9 +5,9 @@ import os
 
 from src import utils
 from src.blog_generator import BlogGenerator
+from src.blog_media_enhancer import BlogMediaEnhancer
 from src.downloader import YouTubeDownloader
 from src.transcriber import Transcriber
-from src.blog_media_enhancer import BlogMediaEnhancer
 
 
 def main(output_dir, api_key, model_name):
@@ -56,11 +56,19 @@ if __name__ == "__main__":
         description="Download, transcribe, and summarize a YouTube video.",
     )
     parser.add_argument(
-        "output_dir", type=str, help="The directory to save the summary file.",
+        "output_dir",
+        type=str,
+        help="The directory to save the summary file.",
     )
-    parser.add_argument("api_key", type=str, help="The API key for openai API.")
+    parser.add_argument("api_key",
+                        type=str,
+                        help="The API key for openai API.",
+                        )
     parser.add_argument(
-        "--model_name", type=str, default="gpt-3.5-turbo", help="The model name used as blog generator.",
+        "--model_name",
+        type=str,
+        default="gpt-3.5-turbo",
+        help="The model name used as blog generator.",
     )
     args = parser.parse_args()
     main(args.output_dir, args.api_key, args.model_name)
