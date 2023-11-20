@@ -147,14 +147,11 @@ class BlogGenerator:
 
         blog_post = ""
         while input_text:
-            utils.logging.info(f"Chunk size: {chunk_size}")
             chunk = self._split_into_first_chunk(input_text, chunk_size)
             user_message = self._create_refine_prompt(blog_post, chunk)
 
             blog_post = self._generate_answer(system_message, user_message)
-            utils.logging.info(f"Blog post: {blog_post}")
             blog_post_length = self._count_tokens(blog_post)
-            utils.logging.info(f"Blog post token count: {blog_post_length}")
 
             chunk_size = (
                     MODEL_TOKEN_LENGTH_MAPPING[self.model_name] -
@@ -165,6 +162,5 @@ class BlogGenerator:
             )
 
             input_text = input_text.replace(chunk, "")
-            utils.logging.info(f"Remaining token count: {self._count_tokens(input_text)}")
 
         return blog_post
