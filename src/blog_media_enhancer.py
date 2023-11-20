@@ -113,34 +113,31 @@ class BlogMediaEnhancer:
         ]
         return retrieved_image_names
 
-    def _extract_headlines_with_images(self, markdown_content):
-        """Extracts the headlines with images from the given markdown content.
+    def _extract_alt_text_with_image_tags(self, markdown_content):
+        """Extracts alt text and image markdown tags from markdown content.
 
         Args:
-            markdown_content (str): The markdown content to extract the headlines from.
+            markdown_content (str): The markdown content to extract from.
 
         Returns:
-            dict: A dictionary mapping headlines to their image tags.
+            dict: A dictionary mapping alt text to their respective image markdown tags.
         """
-        image_pattern = re.compile(r'!\[.*?\]\(\s*(.*?)\s*(?: ".*?")?\s*\)')
-        headline_pattern = re.compile(r'^\s*(#{1,6})\s*(.*)', re.MULTILINE)
+        image_pattern = re.compile(r'(!\[.*?\]\(\s*.*?\s*(?: ".*?")?\s*\))')
+        description_image_tags = {}
 
-        headlines_images = {}
-        current_headline = None
         lines = markdown_content.split('\n')
 
         for line in lines:
-            headline_match = headline_pattern.match(line)
-            if headline_match:
-                current_headline = headline_match.group(2).strip()
-                continue
-
             image_match = image_pattern.search(line)
-            if image_match and current_headline:
-                headlines_images[current_headline] = image_match.string
-                current_headline = None
+            if image_match:
+                image_tag = image_match.group(1).strip()
+                # Extracting alt text from the image tag
+                alt_text_match = re.search(r'!\[(.*?)\]', image_tag)
+                if alt_text_match:
+                    alt_text = alt_text_match.group(1).strip()
+                    description_image_tags[alt_text] = image_tag
 
-        return headlines_images
+        return description_image_tags
 
     def _remove_unused_images(self, keep_image_names):
         """Removes the images that are not used in the blog post.
@@ -163,7 +160,7 @@ class BlogMediaEnhancer:
             str: The blog content with the images added.
         """
         images_dict = self._extract_images(video_file_path)
-        image_placeholder_queries = self._extract_headlines_with_images(blog_content)
+        image_placeholder_queries = self._extract_alt_text_with_image_tags(blog_content)
 
         images_text_dict = {}
         for img_name, img in images_dict.items():
@@ -178,8 +175,8 @@ class BlogMediaEnhancer:
 
         used_images = []
 
-        for headline, img_tag in image_placeholder_queries.items():
-            query = self._embed_text(headline)
+        for alt_text, img_tag in image_placeholder_queries.items():
+            query = self._embed_text(alt_text)
             query = query.reshape(1, -1)
             retrieved_image_name = self._query_index(
                 index, query, images_text_dict, k=1,
@@ -187,7 +184,7 @@ class BlogMediaEnhancer:
             used_images.append(retrieved_image_name)
             image_path = os.path.join(self.image_dir_name, retrieved_image_name)
             blog_content = blog_content.replace(
-                img_tag, f"![{retrieved_image_name}]({image_path})",
+                img_tag, f"![{alt_text}]({image_path})",
             )
 
         self._remove_unused_images(used_images)
