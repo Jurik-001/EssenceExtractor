@@ -190,3 +190,24 @@ class BlogMediaEnhancer:
         self._remove_unused_images(used_images)
 
         return blog_content
+
+    def add_url_timestamps_to_blog(self, youtube_url, blog_content):
+        """Adds url with timestamps to the blog content.
+
+        Args:
+            youtube_url (str): The youtube url.
+            blog_content (str): The blog content.
+
+        Returns:
+            str: The blog content with the url and timestamps added.
+        """
+        timestamp_pattern = r"\[(?:(\d{1,2}):)?(\d{1,2}):(\d{2})\]"
+
+        def timestamp_to_link(match):
+            hours, minutes, seconds = match.groups(default="0")
+            total_seconds = int(hours) * 3600 + int(minutes) * 60 + int(seconds)
+            timestamp = match.group(0)  # The entire match, e.g., [12:30]
+            return f"{timestamp}({youtube_url}&t={total_seconds}s)"
+
+        return re.sub(timestamp_pattern, timestamp_to_link, blog_content)
+

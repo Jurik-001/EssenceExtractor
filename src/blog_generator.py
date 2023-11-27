@@ -13,11 +13,11 @@ OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 class BlogGenerator:
     """Generate a blog post from a text file."""
 
-    def __init__(self, output_path="blogs", model_name="gpt-3.5-turbo"):
+    def __init__(self, output_path="blogs", model_name=utils.DEFAULT_MODEL_NAME):
         self.model_name = model_name
         self.output_path = output_path
         self.client = OpenAI()
-        self.token_counter = utils.TokenCounter(model_name)
+        self.token_counter = utils.TokenCounter(self.model_name)
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
@@ -99,7 +99,7 @@ class BlogGenerator:
             "If the context isn't useful, return the original blog article."
         )
 
-    def generate_blog(self, text_file_path):
+    def generate_article_content(self, text_file_path):
         """Generate a blog post from a text file.
 
         Args:
@@ -109,13 +109,13 @@ class BlogGenerator:
             str: The path to the generated blog post.
         """
         input_text = self._read_text_file(text_file_path)
-        system_message = ("Your role is creating one final version "
-                          "of a ready to publish article based on transcript. "
+        system_message = ("Your role is creating a finalized version "
+                          "of a ready to publish article based on given transcript. "
                           "Write the article with a focus on educating the reader and"
                           "a captivating introduction, body, and a concise conclusion, "
-                          "use markdown and "
-                          "placing images using ![...](path_to_image) "
-                          "and a meaningful alt text.\n")
+                          "use markdown and"
+                          "move the timestamp, looking like: [MM:SS] to the end of a matching section."
+                          ".\n")
         system_msg_length = self.token_counter.count_tokens(system_message)
 
         user_msg_length = self.token_counter.count_tokens(self._create_refine_prompt("", ""))
@@ -145,3 +145,18 @@ class BlogGenerator:
             input_text = input_text.replace(chunk, "")
 
         return blog_post
+
+    def add_image_placeholder(self, blog_content):
+        """Adds image placeholder to the blog content.
+
+        Args:
+            blog_content (str): The blog content.
+
+        Returns:
+            str: The blog content with image placeholders.
+        """
+        system_message = ("Your role is to NOT changing the following article "
+                          "and if it adds value place images before or after the section using ![...](path_to_image) "
+                          "with a meaningful alt text.\n")
+        blog_content = self._generate_answer(system_message, blog_content)
+        return blog_content
