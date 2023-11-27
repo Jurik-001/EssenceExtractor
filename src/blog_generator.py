@@ -113,8 +113,9 @@ class BlogGenerator:
                           "of a ready to publish article based on given transcript. "
                           "Write the article with a focus on educating the reader and"
                           "a captivating introduction, body, and a concise conclusion, "
-                          "use markdown and"
-                          "move the timestamp, looking like: [MM:SS] to the end of a matching section."
+                          "use markdown, than "
+                          "place each timestamp, formatted as [MM:SS], to "
+                          "the end of its relevant section using [MM:SS - MM:SS]."
                           ".\n")
         system_msg_length = self.token_counter.count_tokens(system_message)
 

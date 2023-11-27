@@ -192,22 +192,23 @@ class BlogMediaEnhancer:
         return blog_content
 
     def add_url_timestamps_to_blog(self, youtube_url, blog_content):
-        """Adds url with timestamps to the blog content.
+        """Adds url with the first timestamp of a range to the blog content in Markdown format.
 
         Args:
-            youtube_url (str): The youtube url.
+            youtube_url (str): The YouTube URL.
             blog_content (str): The blog content.
 
         Returns:
-            str: The blog content with the url and timestamps added.
+            str: The blog content with the URL and the first timestamp of a range added in Markdown format.
         """
-        timestamp_pattern = r"\[(?:(\d{1,2}):)?(\d{1,2}):(\d{2})\]"
+        # Regular expression to match [mm:ss - mm:ss] format and capture the first timestamp
+        timestamp_pattern = r"\[(\d{1,2}):(\d{2}) - \d{1,2}:\d{2}\]"
 
         def timestamp_to_link(match):
-            hours, minutes, seconds = match.groups(default="0")
-            total_seconds = int(hours) * 3600 + int(minutes) * 60 + int(seconds)
-            timestamp = match.group(0)  # The entire match, e.g., [12:30]
-            return f"{timestamp}({youtube_url}&t={total_seconds}s)"
+            first_minutes, first_seconds = match.group(1), match.group(2)
+            total_seconds = int(first_minutes) * 60 + int(first_seconds)
+            full_range = match.group(0)  # The entire match, e.g., [01:03 - 07:58]
+            return f"[{full_range}]({youtube_url}&t={total_seconds}s)"
 
         return re.sub(timestamp_pattern, timestamp_to_link, blog_content)
 
