@@ -78,7 +78,7 @@ class BlogMediaEnhancer:
         Returns:
             A list of numpy arrays, each representing the embedded text.
         """
-        embeddings = self.model.encode(text, show_progress_bar=True)
+        embeddings = self.model.encode(text, show_progress_bar=False)
 
         return embeddings
 
@@ -131,7 +131,6 @@ class BlogMediaEnhancer:
             image_match = image_pattern.search(line)
             if image_match:
                 image_tag = image_match.group(1).strip()
-                # Extracting alt text from the image tag
                 alt_text_match = re.search(r'!\[(.*?)\]', image_tag)
                 if alt_text_match:
                     alt_text = alt_text_match.group(1).strip()
@@ -192,16 +191,16 @@ class BlogMediaEnhancer:
         return blog_content
 
     def add_url_timestamps_to_blog(self, youtube_url, blog_content):
-        """Adds url with the first timestamp of a range to the blog content in Markdown format.
+        """Adds url with timestamp to the blog content in Markdown format.
 
         Args:
             youtube_url (str): The YouTube URL.
             blog_content (str): The blog content.
 
         Returns:
-            str: The blog content with the URL and the first timestamp of a range added in Markdown format.
+            str: The blog content with the URL and the
+            first timestamp of a range added in Markdown format.
         """
-        # Regular expression to match [mm:ss - mm:ss] format and capture the first timestamp
         timestamp_pattern = r"\[(\d{1,2}):(\d{2}) - \d{1,2}:\d{2}\]"
 
         def timestamp_to_link(match):

@@ -3,8 +3,8 @@
 import os
 
 import speech_recognition as sr
-from moviepy.editor import AudioFileClip
 import whisper
+from moviepy.editor import AudioFileClip
 
 from src import utils
 

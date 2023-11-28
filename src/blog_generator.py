@@ -6,7 +6,6 @@ from openai import OpenAI
 
 from src import utils
 
-
 OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 
 
@@ -119,7 +118,9 @@ class BlogGenerator:
                           ".\n")
         system_msg_length = self.token_counter.count_tokens(system_message)
 
-        user_msg_length = self.token_counter.count_tokens(self._create_refine_prompt("", ""))
+        user_msg_length = self.token_counter.count_tokens(
+            self._create_refine_prompt("", ""),
+        )
         chunk_size = (
                 self.token_counter.model_token_length -
                 system_msg_length -
@@ -157,7 +158,8 @@ class BlogGenerator:
             str: The blog content with image placeholders.
         """
         system_message = ("Your role is to NOT changing the following article "
-                          "and if it adds value place images before or after the section using ![...](path_to_image) "
+                          "and if it adds value place images before or after "
+                          "the section using ![...](path_to_image) "
                           "with a meaningful alt text.\n")
         blog_content = self._generate_answer(system_message, blog_content)
         return blog_content

@@ -19,6 +19,7 @@ pytesseract = "^0.3.10"
 sentence-transformers = "^2.2.2"
 faiss-cpu = "^1.7.4"
 tiktoken = "^0.3.3"
+tqdm = "^4.66.1"
 
 [tool.poetry.group.dev.dependencies]
 notebook = "^7.0.6"

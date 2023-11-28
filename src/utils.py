@@ -1,6 +1,7 @@
 """This module provides utility functions."""
 
 import logging
+
 import tiktoken
 
 logging.basicConfig(
@@ -8,10 +9,26 @@ logging.basicConfig(
 )
 
 MODEL_TOKEN_LENGTH_MAPPING = {
-    "gpt-3.5-turbo-1106": {"token_length": 16385, "input_token_cost": 0.0010, "output_token_cost": 0.0020},
-    "gpt-4-1106-preview": {"token_length": 128000, "input_token_cost": 0.01, "output_token_cost": 0.03},
-    "gpt-4": {"token_length": 8192, "input_token_cost": 0.03, "output_token_cost": 0.06},
-    "gpt-4-32k": {"token_length": 32768, "input_token_cost": 0.06, "output_token_cost": 0.12},
+    "gpt-3.5-turbo-1106": {
+        "token_length": 16385,
+        "input_token_cost": 0.0010,
+        "output_token_cost": 0.0020,
+    },
+    "gpt-4-1106-preview": {
+        "token_length": 128000,
+        "input_token_cost": 0.01,
+        "output_token_cost": 0.03,
+    },
+    "gpt-4": {
+        "token_length": 8192,
+        "input_token_cost": 0.03,
+        "output_token_cost": 0.06,
+    },
+    "gpt-4-32k": {
+        "token_length": 32768,
+        "input_token_cost": 0.06,
+        "output_token_cost": 0.12,
+    },
 }
 
 DEFAULT_MODEL_NAME = "gpt-3.5-turbo-1106"
