@@ -2,18 +2,10 @@
 
 import os
 
-import tiktoken
 from openai import OpenAI
 
 from src import utils
 
-MODEL_TOKEN_LENGTH_MAPPING = {
-    "gpt-3.5-turbo": 4096,
-    "gpt-3.5-turbo-1106": 16385,
-    "gpt-4-1106-preview": 128000,
-    "gpt-4": 8192,
-    "gpt-4-32k": 32768,
-}
 
 OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 
@@ -21,11 +13,11 @@ OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 class BlogGenerator:
     """Generate a blog post from a text file."""
 
-    def __init__(self, output_path="blogs", model_name="gpt-3.5-turbo"):
+    def __init__(self, output_path="blogs", model_name=utils.DEFAULT_MODEL_NAME):
         self.model_name = model_name
         self.output_path = output_path
         self.client = OpenAI()
-        self.encoding = tiktoken.encoding_for_model(model_name)
+        self.token_counter = utils.TokenCounter(self.model_name)
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
@@ -41,18 +33,6 @@ class BlogGenerator:
         with open(file_path, "r") as f:
             text = f.read()
         return text
-
-    def _count_tokens(self, text):
-        """Count the number of tokens in a text.
-
-        Args:
-            text (str): The text to count the tokens of.
-
-        Returns:
-            int: The number of tokens in the text.
-        """
-        token_count = len(self.encoding.encode(text))
-        return token_count
 
     def _generate_answer(self, system_prompt, user_prompt):
         """Generate an answer from a prompt.
@@ -90,7 +70,7 @@ class BlogGenerator:
 
         for word in words:
             current_chunk.append(word)
-            current_count = self._count_tokens(separator.join(current_chunk))
+            current_count = self.token_counter.count_tokens(separator.join(current_chunk))
 
             if current_count >= chunk_size:
                 return separator.join(current_chunk)
@@ -119,7 +99,7 @@ class BlogGenerator:
             "If the context isn't useful, return the original blog article."
         )
 
-    def generate_blog(self, text_file_path):
+    def generate_article_content(self, text_file_path):
         """Generate a blog post from a text file.
 
         Args:
@@ -129,18 +109,19 @@ class BlogGenerator:
             str: The path to the generated blog post.
         """
         input_text = self._read_text_file(text_file_path)
-        system_message = ("Your role is creating one final version "
-                          "of a ready to publish article based on transcript. "
+        system_message = ("Your role is creating a finalized version "
+                          "of a ready to publish article based on given transcript. "
                           "Write the article with a focus on educating the reader and"
                           "a captivating introduction, body, and a concise conclusion, "
-                          "use markdown and "
-                          "placing images using ![...](path_to_image) "
-                          "and a meaningful alt text.\n")
-        system_msg_length = self._count_tokens(system_message)
+                          "use markdown, than "
+                          "place each timestamp, formatted as [MM:SS], to "
+                          "the end of its relevant section using [MM:SS - MM:SS]."
+                          ".\n")
+        system_msg_length = self.token_counter.count_tokens(system_message)
 
-        user_msg_length = self._count_tokens(self._create_refine_prompt("", ""))
+        user_msg_length = self.token_counter.count_tokens(self._create_refine_prompt("", ""))
         chunk_size = (
-                MODEL_TOKEN_LENGTH_MAPPING[self.model_name] -
+                self.token_counter.model_token_length -
                 system_msg_length -
                 user_msg_length -
                 OUTPUT_TOKEN_LENGTH_BUFFER
@@ -152,10 +133,10 @@ class BlogGenerator:
             user_message = self._create_refine_prompt(blog_post, chunk)
 
             blog_post = self._generate_answer(system_message, user_message)
-            blog_post_length = self._count_tokens(blog_post)
+            blog_post_length = self.token_counter.count_tokens(blog_post)
 
             chunk_size = (
-                    MODEL_TOKEN_LENGTH_MAPPING[self.model_name] -
+                    self.token_counter.model_token_length -
                     system_msg_length -
                     user_msg_length -
                     blog_post_length -
@@ -165,3 +146,18 @@ class BlogGenerator:
             input_text = input_text.replace(chunk, "")
 
         return blog_post
+
+    def add_image_placeholder(self, blog_content):
+        """Adds image placeholder to the blog content.
+
+        Args:
+            blog_content (str): The blog content.
+
+        Returns:
+            str: The blog content with image placeholders.
+        """
+        system_message = ("Your role is to NOT changing the following article "
+                          "and if it adds value place images before or after the section using ![...](path_to_image) "
+                          "with a meaningful alt text.\n")
+        blog_content = self._generate_answer(system_message, blog_content)
+        return blog_content
