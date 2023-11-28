@@ -12,11 +12,17 @@ OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 class BlogGenerator:
     """Generate a blog post from a text file."""
 
-    def __init__(self, output_path="blogs", model_name=utils.DEFAULT_MODEL_NAME):
+    def __init__(
+            self,
+            output_path="blogs",
+            model_name=utils.DEFAULT_MODEL_NAME,
+            cost_manager=None,
+    ):
         self.model_name = model_name
         self.output_path = output_path
         self.client = OpenAI()
         self.token_counter = utils.TokenCounter(self.model_name)
+        self.cost_manager = cost_manager
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
@@ -133,8 +139,13 @@ class BlogGenerator:
             chunk = self._split_into_first_chunk(input_text, chunk_size)
             user_message = self._create_refine_prompt(blog_post, chunk)
 
+            if self.cost_manager:
+                self.cost_manager.calculate_cost_text(user_message, is_input=True)
+
             blog_post = self._generate_answer(system_message, user_message)
             blog_post_length = self.token_counter.count_tokens(blog_post)
+            if self.cost_manager:
+                self.cost_manager.calculate_cost_token(blog_post_length, is_input=False)
 
             chunk_size = (
                     self.token_counter.model_token_length -

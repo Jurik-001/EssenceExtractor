@@ -8,6 +8,7 @@ from tqdm import tqdm
 from src import utils
 from src.blog_generator import BlogGenerator
 from src.blog_media_enhancer import BlogMediaEnhancer
+from src.cost_management import CostManager
 from src.downloader import YouTubeDownloader
 from src.transcriber import Transcriber
 
@@ -22,9 +23,12 @@ def main(output_dir, api_key, model_name):
     """
     os.environ["OPENAI_API_KEY"] = api_key
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    cost_manager = CostManager(model_name=model_name)
     yt_downloader = YouTubeDownloader(output_path=output_dir)
     transcriber = Transcriber(output_path=output_dir)
-    blog_generator = BlogGenerator(output_path=output_dir, model_name=model_name)
+    blog_generator = BlogGenerator(
+        output_path=output_dir, model_name=model_name, cost_manager=cost_manager,
+    )
     media_enhancer = BlogMediaEnhancer(output_path=output_dir)
 
     youtube_video_url = input("Please enter the YouTube video URL: ")
@@ -76,6 +80,8 @@ def main(output_dir, api_key, model_name):
         )
         utils.save_to_md_file(blog_content, blog_post_path)
         pbar.update(1)
+
+    utils.logging.info(f"Blog post cost: {cost_manager.get_total_cost()}$")
 
 
 if __name__ == "__main__":
