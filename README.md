@@ -1,6 +1,6 @@
 # Essence Extractor 📜✨
 
-Essence Extractor is a dynamic tool designed to transform YouTube videos into engaging and concise blog posts. 🎥➡️📄 This utility automates the process of downloading videos, extracting audio, transcribing speech, and generating a summary to create a ready-to-publish blog post.
+Essence Extractor is a dynamic tool designed to transform YouTube videos into engaging and concise blog posts. This utility automates the process of downloading videos, extracting audio, transcribing speech, and generating a summary to create a ready-to-publish blog post.
 
 ## Limitations ⚠️
 - Due to the nature of llm, results may vary.
