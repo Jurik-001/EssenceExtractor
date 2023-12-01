@@ -4,7 +4,11 @@ from src import utils
 
 
 class CostManager:
-    """This class is used to calculate the cost of a text."""
+    """This class is used to calculate the cost of a text.
+
+    Attributes:
+        model_name (str): The name of the model to use.
+    """
     def __init__(self, model_name):
         self.model_name = model_name
         self.input_token_cost = \

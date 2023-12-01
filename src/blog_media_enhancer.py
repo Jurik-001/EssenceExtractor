@@ -11,10 +11,15 @@ from moviepy.editor import VideoFileClip
 from sentence_transformers import SentenceTransformer
 
 from src import utils
+from src.data_models import YouTubeURL
 
 
 class BlogMediaEnhancer:
-    """Adds images to a blog post based on the content of the blog post."""
+    """Adds images to a blog post based on the content of the blog post.
+
+    Attributes:
+        output_path (str): The path to the output directory.
+    """
     def __init__(self, output_path='images'):
         self.output_path = output_path
         self.image_dir_name = 'images'
@@ -201,6 +206,7 @@ class BlogMediaEnhancer:
             str: The blog content with the URL and the
             first timestamp of a range added in Markdown format.
         """
+        youtube_url = YouTubeURL(url=youtube_url).url
         timestamp_pattern = r"\[(\d{1,2}):(\d{2}) - \d{1,2}:\d{2}\]"
 
         def timestamp_to_link(match):

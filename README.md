@@ -56,6 +56,9 @@ Running Essence Extractor will populate your output directory with:
 - **Images Directory**: A directory containing all the images used in the blog post.
 - **Blog Post File**: Your brand new blog post, ready for the world to see.
 
+## Documentation 📖
+To learn more about Essence Extractor, check out our [documentation](https://essenceextractor.readthedocs.io/en/latest/).
+
 ## Join the Essence Extractor Community 🤝
 
 Got ideas or found a bug? We’d love to have you in our contributor community! 🚀 Check out our [contributing guidelines](.github/CONTRIBUTING.md) to get started.

@@ -10,7 +10,11 @@ from src import utils
 
 
 class Transcriber:
-    """Extracts audio from a video file and transcribes it to text."""
+    """Extracts audio from a video file and transcribes it to text.
+
+    Attributes:
+        output_path (str): The path to the output directory.
+    """
 
     def __init__(self, output_path="audios"):
         self.output_path = output_path

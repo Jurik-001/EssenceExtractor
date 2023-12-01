@@ -11,6 +11,7 @@ from src.blog_media_enhancer import BlogMediaEnhancer
 from src.cost_management import CostManager
 from src.downloader import YouTubeDownloader
 from src.transcriber import Transcriber
+from src.data_models import YouTubeURL
 
 
 def main(output_dir, api_key, model_name):
@@ -32,6 +33,7 @@ def main(output_dir, api_key, model_name):
     media_enhancer = BlogMediaEnhancer(output_path=output_dir)
 
     youtube_video_url = input("Please enter the YouTube video URL: ")
+    youtube_video_url = YouTubeURL(url=youtube_video_url).url
 
     tasks = ["Downloading Video", "Extracting Audio",
              "Transcribing Audio", "Generating Blog Post",

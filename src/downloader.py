@@ -5,11 +5,15 @@ import os
 from pytube import YouTube
 
 from src import utils
+from src.data_models import YouTubeURL
 
 
 class YouTubeDownloader:
-    """Download a YouTube video."""
+    """Download a YouTube video.
 
+    Attributes:
+        output_path (str): The path to the output directory.
+    """
     def __init__(self, output_path="videos"):
         self.output_path = output_path
         if not os.path.exists(self.output_path):
@@ -24,6 +28,8 @@ class YouTubeDownloader:
         Returns:
             str: The path to the downloaded video file.
         """
+        url = str(YouTubeURL(url=url).url)
+        print("Type of url: ", type(url))
         try:
             yt = YouTube(url)
 
@@ -35,5 +41,4 @@ class YouTubeDownloader:
             return video_file_path
 
         except Exception as e:
-            utils.logging.info("An error occurred:", str(e))
-            return None
+            raise utils.YouTubeDownloadError(f"Error downloading YouTube video: {e}")
