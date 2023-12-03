@@ -67,6 +67,8 @@ class BlogGenerator:
                 {"role": "user", "content": user_prompt},
             ],
         )
+        print("response: ", response)
+        print("response.choices: ", response.choices)
         return response.choices[0].message.content
 
     def _split_into_first_chunk(self, text, chunk_size, separator=" "):
