@@ -26,11 +26,11 @@ jobs:
 
     - name: Lint with Ruff
       run: |
-        poetry run ruff src main.py
+        poetry run ruff essence-extractor/src essence-extractor/main.py
 
     - name: Test with pytest
       run: |
-        poetry run pytest --cov=src --cov-report=xml
+        poetry run pytest --cov=essence-extractor/src --cov-report=xml
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3

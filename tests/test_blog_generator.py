@@ -1,4 +1,4 @@
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import MagicMock
 import pytest
 from src.blog_generator import BlogGenerator
 from pydantic import ValidationError
