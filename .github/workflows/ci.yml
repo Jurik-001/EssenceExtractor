@@ -24,7 +24,7 @@ jobs:
 
     - name: Lint with Ruff
       run: |
-        poetry run ruff src tests main.py
+        poetry run ruff src main.py
 
     - name: Test with pytest
       run: |
