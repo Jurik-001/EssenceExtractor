@@ -29,7 +29,6 @@ class YouTubeDownloader:
             str: The path to the downloaded video file.
         """
         url = str(YouTubeURL(url=url).url)
-        print("Type of url: ", type(url))
         try:
             yt = YouTube(url)
 

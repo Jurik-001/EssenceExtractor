@@ -13,7 +13,6 @@ def test_valid_youtube_url():
         try:
             YouTubeURL(url=url)
         except Exception as e:
-            print("Fehelr")
             pytest.fail(f"URL {url} should be valid")
 
 

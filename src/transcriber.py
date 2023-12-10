@@ -57,7 +57,6 @@ class Transcriber:
         start_time = 0
         for segment in transcript_result["segments"]:
             if segment["text"] == "":
-                print("Silence detected. Continuing to next segment.")
                 continue
 
             new_chunk = chunk + " " + segment["text"] if chunk else segment["text"]

@@ -13,7 +13,6 @@ def test_extract_images(mock_video_clip):
     enhancer = BlogMediaEnhancer(output_path='test_output')
 
     extracted_images = enhancer._extract_images('dummy_video_path', interval=10)
-    print(f"extracted_images: {extracted_images}")
     assert len(extracted_images) == 3
 
 
