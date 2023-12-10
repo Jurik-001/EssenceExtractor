@@ -4,29 +4,39 @@ import os
 
 from openai import OpenAI
 
-from src import utils
+from src import data_models, utils
+from src.cost_management import CostManager
 
 OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 
 
 class BlogGenerator:
-    """Generate a blog post from a text file."""
+    """Generate a blog post from a text file.
+
+    Attributes:
+        model_name (str): The name of the model to use.
+        output_path (str): The path to the output directory.
+        cost_manager (CostManager): The cost manager.
+    """
 
     def __init__(
             self,
-            output_path="blogs",
             model_name=utils.DEFAULT_MODEL_NAME,
+            output_path="blogs",
             cost_manager=None,
     ):
-        self.model_name = model_name
+        self.model_name = data_models.LlmModelName(llm_name=model_name).llm_name
         self.output_path = output_path
         self.client = OpenAI()
         self.token_counter = utils.TokenCounter(self.model_name)
+        if cost_manager is not None and not isinstance(cost_manager, CostManager):
+            raise TypeError("cost_manager must be an instance of CostManager or None")
         self.cost_manager = cost_manager
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
-    def _read_text_file(self, file_path):
+    @staticmethod
+    def _read_text_file(file_path):
         """Read a text file.
 
         Args:
@@ -35,6 +45,7 @@ class BlogGenerator:
         Returns:
             str: The text in the file.
         """
+        file_path = data_models.FilePath(file_path=file_path).file_path
         with open(file_path, "r") as f:
             text = f.read()
         return text

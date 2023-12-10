@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub issues](https://img.shields.io/github/issues/Jurik-001/EssenceExtractor)
+[![Coverage](https://codecov.io/gh/Jurik-001/EssenceExtractor/branch/master/graph/badge.svg)](https://codecov.io/gh/Jurik-001/EssenceExtractor)
 # Essence Extractor 📜✨
 
 Essence Extractor is a dynamic tool designed to transform YouTube videos into engaging and concise blog posts. This utility automates the process of downloading videos, extracting audio, transcribing speech, and generating a summary to create a ready-to-publish blog post.
@@ -55,6 +58,9 @@ Running Essence Extractor will populate your output directory with:
 - **Transcription File**: A text file with everything that was said in the video.
 - **Images Directory**: A directory containing all the images used in the blog post.
 - **Blog Post File**: Your brand new blog post, ready for the world to see.
+
+## Documentation 📖
+To learn more about Essence Extractor, check out our [documentation](https://essenceextractor.readthedocs.io/en/latest/).
 
 ## Join the Essence Extractor Community 🤝
 

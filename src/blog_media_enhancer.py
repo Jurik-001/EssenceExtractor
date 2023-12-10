@@ -11,10 +11,15 @@ from moviepy.editor import VideoFileClip
 from sentence_transformers import SentenceTransformer
 
 from src import utils
+from src.data_models import YouTubeURL
 
 
 class BlogMediaEnhancer:
-    """Adds images to a blog post based on the content of the blog post."""
+    """Adds images to a blog post based on the content of the blog post.
+
+    Attributes:
+        output_path (str): The path to the output directory.
+    """
     def __init__(self, output_path='images'):
         self.output_path = output_path
         self.image_dir_name = 'images'
@@ -35,11 +40,18 @@ class BlogMediaEnhancer:
         Returns:
             List[str]: A list of paths to the extracted images.
         """
+        if not isinstance(interval, int) or interval <= 0:
+            raise ValueError("Interval must be a positive integer")
+
         if not os.path.exists(self.image_output_path):
             os.makedirs(self.image_output_path)
 
         video = VideoFileClip(video_file_path)
         duration = video.duration
+
+        if interval > duration:
+            raise ValueError("Interval cannot be longer than the video duration")
+
         extracted_images = {}
 
         for i in range(0, math.ceil(duration), interval):
@@ -201,13 +213,14 @@ class BlogMediaEnhancer:
             str: The blog content with the URL and the
             first timestamp of a range added in Markdown format.
         """
+        youtube_url = YouTubeURL(url=youtube_url).url
         timestamp_pattern = r"\[(\d{1,2}):(\d{2}) - \d{1,2}:\d{2}\]"
 
         def timestamp_to_link(match):
             first_minutes, first_seconds = match.group(1), match.group(2)
             total_seconds = int(first_minutes) * 60 + int(first_seconds)
-            full_range = match.group(0)  # The entire match, e.g., [01:03 - 07:58]
-            return f"[{full_range}]({youtube_url}&t={total_seconds}s)"
+            full_range = match.group(0)
+            return f"{full_range}({youtube_url}&t={total_seconds}s)"
 
         return re.sub(timestamp_pattern, timestamp_to_link, blog_content)
 
