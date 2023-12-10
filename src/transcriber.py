@@ -46,24 +46,37 @@ class Transcriber:
         except Exception as e:
             utils.logging.error("An error occurred:", str(e))
             return None
-        
+
     def split_audio_into_token_chunks(self, transcript_result, chunk_size=200):
         """Split audio into chunks of equal length or silence."""
+        if not transcript_result or "segments" not in transcript_result:
+            raise ValueError("Invalid transcript result format")
+
         chunks = []
         chunk = ""
         start_time = 0
         for segment in transcript_result["segments"]:
             if segment["text"] == "":
-                print("Silence")
+                print("Silence detected. Continuing to next segment.")
                 continue
-                
-            tokens = self.token_counter.count_tokens(chunk+segment["text"])
+
+            new_chunk = chunk + " " + segment["text"] if chunk else segment["text"]
+            tokens = self.token_counter.count_tokens(new_chunk)
+
             if tokens > chunk_size:
-                chunks.append({"chunk": chunk, "start_time": start_time})
-                chunk = ""
+                if chunk:
+                    chunks.append({"chunk": chunk, "start_time": start_time})
+                chunk = segment["text"]
                 start_time = segment["end"]
             else:
-                chunk += segment["text"]
+                chunk = new_chunk
+
+        if chunk:
+            chunks.append({"chunk": chunk, "start_time": start_time})
+
+        if not chunks:
+            raise ValueError("No chunks were created. Check chunk size and transcript content.")
+
         return chunks
     
     def _assemble_transcript(self, chunks):

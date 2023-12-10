@@ -36,7 +36,8 @@ class BlogGenerator:
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
-    def _read_text_file(self, file_path):
+    @staticmethod
+    def _read_text_file(file_path):
         """Read a text file.
 
         Args:

@@ -1,79 +1,45 @@
 from unittest.mock import patch, mock_open, MagicMock
 import pytest
 from src.blog_generator import BlogGenerator
+from pydantic import ValidationError
+from tempfile import NamedTemporaryFile
+import os
 
-# Mocking OpenAI Client
-@patch('src.blog_generator.OpenAI')
-def test_generate_answer_with_mocked_openai(mock_openai_client):
-    # Setup mock response
-    mock_response = MagicMock()
-    mock_response.choices[0] = [MagicMock(message=MagicMock(content='Mocked response'))]
-    mock_openai_client.chat.completions.create.return_value = mock_response
 
-    # Instantiate BlogGenerator and call _generate_answer
+def test_read_text_file(monkeypatch):
+    monkeypatch.setattr('src.blog_generator.OpenAI', MagicMock())
+    monkeypatch.setattr('src.utils.TokenCounter', MagicMock())
+
     blog_generator = BlogGenerator()
-    result = blog_generator._generate_answer("System prompt", "User prompt")
 
-    # Assert the mocked response is returned
-    print(f"result: {dir(result)}")
-    print(f"Type of result: {type(result)}")
-    print()
-    assert result == "Mocked response"
+    with NamedTemporaryFile(delete=False, mode="w") as tmp_file:
+        tmp_file.write("Sample content for testing")
+        tmp_file_name = tmp_file.name
 
-# Mocking File Reading
-@patch("builtins.open", new_callable=mock_open, read_data="Mocked file content")
-def test_read_text_file_with_mocked_file(mock_file):
-    # Instantiate BlogGenerator and call _read_text_file
-    blog_generator = BlogGenerator()
-    content = blog_generator._read_text_file("dummy/path.txt")
+    text = blog_generator._read_text_file(tmp_file_name)
 
-    # Assert the mocked file content is returned
-    mock_file.assert_called_with("dummy/path.txt", "r")
-    assert content == "Mocked file content"
+    assert text == "Sample content for testing", "The content read does not match the expected content"
+
+    os.remove(tmp_file_name)
+
+    with pytest.raises(ValidationError):
+        blog_generator._read_text_file('non_existent_file_path')
 
 
-# Test from copilot
-# Test when system_prompt is None
-@patch('src.blog_generator.OpenAI')
-def test_generate_answer_with_none_system_prompt(mock_openai_client):
-    # Setup mock response
-    mock_response = MagicMock()
-    mock_response.choices[0] = [MagicMock(message=MagicMock(content='Mocked response'))]
-    mock_openai_client.chat.completions.create.return_value = mock_response
+def test_split_into_first_chunk(monkeypatch):
+    def mock_count_tokens(self, text):
+        return len(text.split())
 
-    # Instantiate BlogGenerator and call _generate_answer
-    blog_generator = BlogGenerator()
-    result = blog_generator._generate_answer(None, "User prompt")
+    monkeypatch.setattr('src.blog_generator.OpenAI', MagicMock())
+    monkeypatch.setattr('src.utils.TokenCounter.count_tokens', mock_count_tokens)
 
-    # Assert the mocked response is returned
-    assert result == "Mocked response"
+    generator = BlogGenerator()
 
-# Test when user_prompt is None
-@patch('src.blog_generator.OpenAI')
-def test_generate_answer_with_none_user_prompt(mock_openai_client):
-    # Setup mock response
-    mock_response = MagicMock()
-    mock_response.choices[0] = [MagicMock(message=MagicMock(content='Mocked response'))]
-    mock_openai_client.chat.completions.create.return_value = mock_response
+    text = "This is a test sentence for testing."
+    chunk_size = 4
 
-    # Instantiate BlogGenerator and call _generate_answer
-    blog_generator = BlogGenerator()
-    result = blog_generator._generate_answer("System prompt", None)
+    chunk = generator._split_into_first_chunk(text, chunk_size)
 
-    # Assert the mocked response is returned
-    assert result == "Mocked response"
+    expected_chunk = "This is a test"
+    assert chunk == expected_chunk, "The chunked text does not match the expected output"
 
-# Test when both prompts are None
-@patch('src.blog_generator.OpenAI')
-def test_generate_answer_with_both_prompts_none(mock_openai_client):
-    # Setup mock response
-    mock_response = MagicMock()
-    mock_response.choices[0] = [MagicMock(message=MagicMock(content='Mocked response'))]
-    mock_openai_client.chat.completions.create.return_value = mock_response
-
-    # Instantiate BlogGenerator and call _generate_answer
-    blog_generator = BlogGenerator()
-    result = blog_generator._generate_answer(None, None)
-
-    # Assert the mocked response is returned
-    assert result == "Mocked response"
