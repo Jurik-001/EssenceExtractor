@@ -4,7 +4,7 @@ from typing import ClassVar, List
 
 from pydantic import BaseModel, validator
 
-from src.utils import MODEL_TOKEN_LENGTH_MAPPING
+from essence_extractor.src.utils import MODEL_TOKEN_LENGTH_MAPPING
 
 
 class LlmModelName(BaseModel):

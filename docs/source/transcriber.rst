@@ -1,5 +1,5 @@
 Transcriber
 ============================
 
-.. autoclass:: src.Transcriber
+.. autoclass:: essence_extractor.src.Transcriber
    :members:

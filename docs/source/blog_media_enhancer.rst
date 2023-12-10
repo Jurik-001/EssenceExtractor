@@ -1,5 +1,5 @@
 BlogMediaEnhancer
 ============================
 
-.. autoclass:: src.BlogMediaEnhancer
+.. autoclass:: essence_extractor.src.BlogMediaEnhancer
    :members:

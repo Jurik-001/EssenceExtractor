@@ -5,11 +5,11 @@ description = "Unleash the power of content transformation with EssenceExtractor
 authors = ["Jurik-001"]
 readme = "README.md"
 packages = [
-    { include = "essence-extractor" }
+    { include = "essence_extractor" }
 ]
 
 [tool.poetry.scripts]
-essence-extractor = "essence_extractor.main:main"
+essence-extractor = "essence_extractor.main:args_call"
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -26,6 +26,7 @@ faiss-cpu = "^1.7.4"
 tiktoken = "^0.3.3"
 tqdm = "^4.66.1"
 pydantic = "^2.5.2"
+sentence-transformers = "^2.2.2"
 
 [tool.poetry.group.dev.dependencies]
 notebook = "^7.0.6"

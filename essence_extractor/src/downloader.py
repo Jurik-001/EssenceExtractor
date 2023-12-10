@@ -4,8 +4,8 @@ import os
 
 from pytube import YouTube
 
-from src import utils
-from src.data_models import YouTubeURL
+from essence_extractor.src import utils
+from essence_extractor.src.data_models import YouTubeURL
 
 
 class YouTubeDownloader:

@@ -4,8 +4,8 @@ import os
 
 from openai import OpenAI
 
-from src import data_models, utils
-from src.cost_management import CostManager
+from essence_extractor.src import data_models, utils
+from essence_extractor.src.cost_management import CostManager
 
 OUTPUT_TOKEN_LENGTH_BUFFER = 1500
 

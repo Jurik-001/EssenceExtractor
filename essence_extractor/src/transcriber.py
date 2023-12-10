@@ -5,7 +5,7 @@ import os
 import whisper
 from moviepy.editor import AudioFileClip
 
-from src import utils
+from essence_extractor.src import utils
 
 
 class Transcriber:
