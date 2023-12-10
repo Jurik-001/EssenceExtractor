@@ -74,7 +74,8 @@ class Transcriber:
             chunks.append({"chunk": chunk, "start_time": start_time})
 
         if not chunks:
-            raise ValueError("No chunks were created. Check chunk size and transcript content.")
+            raise ValueError("No chunks were created. "
+                             "Check chunk size and transcript content.")
 
         return chunks
     

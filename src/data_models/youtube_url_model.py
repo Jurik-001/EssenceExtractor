@@ -1,11 +1,17 @@
-from pydantic import BaseModel, HttpUrl, validator
+"""Data model for YouTube URL."""
+
 import re
 
+from pydantic import BaseModel, HttpUrl, validator
+
+
 class YouTubeURL(BaseModel):
+    """Data model for YouTube URL."""
     url: HttpUrl
 
     @validator('url')
     def validate_youtube_url(cls, v):
+        """Validate that the URL is a valid YouTube URL."""
         youtube_regex = (
             r'(https?://)?(www\.)?'
             '(youtube|youtu|youtube-nocookie)\.(com|be)/'

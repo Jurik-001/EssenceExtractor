@@ -4,8 +4,7 @@ import os
 
 from openai import OpenAI
 
-from src import utils
-from src import data_models
+from src import data_models, utils
 from src.cost_management import CostManager
 
 OUTPUT_TOKEN_LENGTH_BUFFER = 1500

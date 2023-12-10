@@ -9,9 +9,9 @@ from src import utils
 from src.blog_generator import BlogGenerator
 from src.blog_media_enhancer import BlogMediaEnhancer
 from src.cost_management import CostManager
+from src.data_models import YouTubeURL
 from src.downloader import YouTubeDownloader
 from src.transcriber import Transcriber
-from src.data_models import YouTubeURL
 
 
 def main(output_dir, api_key, model_name):
