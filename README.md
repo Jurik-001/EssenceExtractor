@@ -12,30 +12,14 @@ Essence Extractor is a dynamic tool designed to transform YouTube videos into en
 - Due to the nature of llm, results may vary.
 
 ## Requirements 🛠️
-In addition to the dependencies listed in `pyproject.toml`, this project requires:
+Before you get started, make sure you have the following installed on your machine:
 - [FFmpeg](https://ffmpeg.org/download.html): A complete, cross-platform solution to record, convert, and stream audio and video.
-- [Poetry](https://python-poetry.org/docs/#installation): A tool for dependency management and packaging in Python.
 
 ## Installation 🖥️
 
-Follow these steps to set up Essence Extractor on your local machine:
-
-1. **Clone the Repository:** 
-   ```bash
-   git clone https://github.com/Jurik-001/EssenceExtractor.git
-   cd EssenceExtractor
-   ```
-
-2. **Create and Activate a Virtual Environment:** 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
-
-3. **Install Dependencies:** 
-   ```bash
-   poetry install
-   ```
+```bash
+pip install essence-extractor
+```
 
 ## Usage 🚀
 
@@ -43,7 +27,7 @@ To unleash the power of Essence Extractor, you'll need an API key from OpenAI. S
 
 Once you have your API key, run:
 ```bash
-python main.py "output_directory" "YOUR_API_KEY"
+essence-extractor "output_directory" "YOUR_API_KEY"
 ```
 - **output_directory**: Where the magic happens - all your output files will land here.
 - **YOUR_API_KEY**: Your secret key to OpenAI's capabilities.
@@ -67,7 +51,7 @@ To learn more about Essence Extractor, check out our [documentation](https://ess
 
 ## Join the Essence Extractor Community 🤝
 
-Got ideas or found a bug? We’d love to have you in our contributor community! 🚀 Check out our [contributing guidelines](.github/CONTRIBUTING.md) to get started.
+Got ideas or found a bug? We’d love to have you in our contributor community! 🚀 Check out our [contributing guidelines](https://github.com/Jurik-001/EssenceExtractor/blob/master/.github/CONTRIBUTING.md) to get started.
 
 ## Roadmap 🗺️
 
