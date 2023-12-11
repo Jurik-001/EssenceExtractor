@@ -1,6 +1,6 @@
 from unittest.mock import patch
-from src import CostManager
-from src import utils
+from essence_extractor import CostManager
+from essence_extractor import utils
 
 
 def test_calculate_cost_token():
@@ -11,7 +11,7 @@ def test_calculate_cost_token():
     assert output_cost == 500 / 1000 * cost_manager.output_token_cost
 
 
-@patch('src.utils.TokenCounter.count_tokens')
+@patch('essence_extractor.src.utils.TokenCounter.count_tokens')
 def test_calculate_cost_text(mock_count_tokens):
     mock_count_tokens.return_value = 500
     cost_manager = CostManager(utils.DEFAULT_MODEL_NAME)

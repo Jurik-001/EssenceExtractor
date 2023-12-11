@@ -1,14 +1,14 @@
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import MagicMock
 import pytest
-from src.blog_generator import BlogGenerator
+from essence_extractor import BlogGenerator
 from pydantic import ValidationError
 from tempfile import NamedTemporaryFile
 import os
 
 
 def test_read_text_file(monkeypatch):
-    monkeypatch.setattr('src.blog_generator.OpenAI', MagicMock())
-    monkeypatch.setattr('src.utils.TokenCounter', MagicMock())
+    monkeypatch.setattr('essence_extractor.src.blog_generator.OpenAI', MagicMock())
+    monkeypatch.setattr('essence_extractor.src.utils.TokenCounter', MagicMock())
 
     blog_generator = BlogGenerator()
 
@@ -30,8 +30,8 @@ def test_split_into_first_chunk(monkeypatch):
     def mock_count_tokens(self, text):
         return len(text.split())
 
-    monkeypatch.setattr('src.blog_generator.OpenAI', MagicMock())
-    monkeypatch.setattr('src.utils.TokenCounter.count_tokens', mock_count_tokens)
+    monkeypatch.setattr('essence_extractor.src.blog_generator.OpenAI', MagicMock())
+    monkeypatch.setattr('essence_extractor.src.utils.TokenCounter.count_tokens', mock_count_tokens)
 
     generator = BlogGenerator()
 

@@ -1,6 +1,6 @@
 # tests/test_youtube_url_model.py
 import pytest
-from src.data_models import YouTubeURL
+from essence_extractor.src.data_models import YouTubeURL
 from pydantic import ValidationError
 
 

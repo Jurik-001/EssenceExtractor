@@ -1,6 +1,6 @@
 """This module is used to calculate the cost of a text."""
 
-from src import utils
+from essence_extractor.src import utils
 
 
 class CostManager:

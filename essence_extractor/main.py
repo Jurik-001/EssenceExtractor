@@ -5,14 +5,37 @@ import os
 
 from tqdm import tqdm
 
-from src import utils
-from src.blog_generator import BlogGenerator
-from src.blog_media_enhancer import BlogMediaEnhancer
-from src.cost_management import CostManager
-from src.data_models import YouTubeURL
-from src.downloader import YouTubeDownloader
-from src.transcriber import Transcriber
+from essence_extractor.src import utils
+from essence_extractor.src.blog_generator import BlogGenerator
+from essence_extractor.src.blog_media_enhancer import BlogMediaEnhancer
+from essence_extractor.src.cost_management import CostManager
+from essence_extractor.src.data_models import YouTubeURL
+from essence_extractor.src.downloader import YouTubeDownloader
+from essence_extractor.src.transcriber import Transcriber
 
+
+def args_call():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Download, transcribe, and summarize a YouTube video.",
+    )
+    parser.add_argument(
+        "output_dir",
+        type=str,
+        help="The directory to save the summary file.",
+    )
+    parser.add_argument("api_key",
+                        type=str,
+                        help="The API key for openai API.",
+                        )
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="gpt-3.5-turbo-1106",
+        help="The model name used as blog generator.",
+    )
+    args = parser.parse_args()
+    main(args.output_dir, args.api_key, args.model_name)
 
 def main(output_dir, api_key, model_name):
     """Download, transcribe, and generate blog post of a YouTube video.
@@ -87,23 +110,4 @@ def main(output_dir, api_key, model_name):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Download, transcribe, and summarize a YouTube video.",
-    )
-    parser.add_argument(
-        "output_dir",
-        type=str,
-        help="The directory to save the summary file.",
-    )
-    parser.add_argument("api_key",
-                        type=str,
-                        help="The API key for openai API.",
-                        )
-    parser.add_argument(
-        "--model_name",
-        type=str,
-        default="gpt-3.5-turbo-1106",
-        help="The model name used as blog generator.",
-    )
-    args = parser.parse_args()
-    main(args.output_dir, args.api_key, args.model_name)
+    args_call()

@@ -10,8 +10,8 @@ import pytesseract
 from moviepy.editor import VideoFileClip
 from sentence_transformers import SentenceTransformer
 
-from src import utils
-from src.data_models import YouTubeURL
+from essence_extractor.src import utils
+from essence_extractor.src.data_models import YouTubeURL
 
 
 class BlogMediaEnhancer:
