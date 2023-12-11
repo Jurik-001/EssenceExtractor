@@ -6,7 +6,7 @@ import pytest
 import faiss
 
 
-@patch('src.blog_media_enhancer.VideoFileClip')
+@patch('essence_extractor.src.blog_media_enhancer.VideoFileClip')
 def test_extract_images(mock_video_clip):
     mock_video = MagicMock(duration=30)
     mock_video_clip.return_value = mock_video
@@ -16,7 +16,7 @@ def test_extract_images(mock_video_clip):
     assert len(extracted_images) == 3
 
 
-@patch('src.blog_media_enhancer.VideoFileClip')
+@patch('essence_extractor.src.blog_media_enhancer.VideoFileClip')
 def test_extract_images_with_negative_interval(mock_video_clip):
     mock_video = MagicMock(duration=30)
     mock_video_clip.return_value = mock_video
@@ -27,7 +27,7 @@ def test_extract_images_with_negative_interval(mock_video_clip):
         enhancer._extract_images('dummy_video_path', interval=-10)
 
 
-@patch('src.blog_media_enhancer.VideoFileClip')
+@patch('essence_extractor.src.blog_media_enhancer.VideoFileClip')
 def test_extract_images_with_short_video(mock_video_clip):
     mock_video = MagicMock(duration=5)  # 5 seconds video
     mock_video_clip.return_value = mock_video
@@ -38,7 +38,7 @@ def test_extract_images_with_short_video(mock_video_clip):
     assert len(extracted_images) == 3, "Should handle short videos correctly"
 
 
-@patch('src.blog_media_enhancer.pytesseract.image_to_string', return_value="Sample Text")
+@patch('essence_extractor.src.blog_media_enhancer.pytesseract.image_to_string', return_value="Sample Text")
 def test_extract_text_from_image(mock_image_to_string):
     enhancer = BlogMediaEnhancer(output_path='test_output')
     text = enhancer._extract_text_from_image(MagicMock())
@@ -78,7 +78,7 @@ def test_remove_unused_images(mock_remove, mock_listdir):
     mock_remove.assert_called_once_with(os.path.join('test_output', 'images', 'image2.png'))
 
 
-@patch('src.blog_media_enhancer.pytesseract.image_to_string', return_value="Image Text")
+@patch('essence_extractor.src.blog_media_enhancer.pytesseract.image_to_string', return_value="Image Text")
 def test_extract_alt_text_with_image_tags(mock_image_to_string):
     markdown_content = """
     Here is an image: ![Alt text](image_url)
@@ -109,7 +109,7 @@ def test_add_images_to_blog():
     assert '![Alt text](images/image1.png)' in updated_content
 
 
-@patch('src.blog_media_enhancer.YouTubeURL')
+@patch('essence_extractor.src.blog_media_enhancer.YouTubeURL')
 def test_add_url_timestamps_to_blog(mock_youtube_url):
     youtube_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     blog_content = "Here is a timestamp: [01:03 - 07:58] in the video."

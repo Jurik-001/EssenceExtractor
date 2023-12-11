@@ -3,7 +3,7 @@ from essence_extractor import Transcriber
 
 
 
-@patch('src.transcriber.AudioFileClip')
+@patch('essence_extractor.src.transcriber.AudioFileClip')
 def test_extract_audio(mock_audio_file_clip):
     mock_audio_file_clip.return_value.write_audiofile = lambda x: None
     transcriber = Transcriber("test_output")
