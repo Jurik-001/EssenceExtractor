@@ -2,6 +2,8 @@
 ![GitHub issues](https://img.shields.io/github/issues/Jurik-001/EssenceExtractor)
 [![Coverage](https://codecov.io/gh/Jurik-001/EssenceExtractor/branch/master/graph/badge.svg)](https://codecov.io/gh/Jurik-001/EssenceExtractor)
 [![Python CI](https://github.com/Jurik-001/EssenceExtractor/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Jurik-001/EssenceExtractor/actions/workflows/ci.yml)
+[![Documentation](https://img.shields.io/badge/-Documentation-gray?logo=readthedocs&style=flat&logoWidth=20)](https://essenceextractor.readthedocs.io/en/latest/)
+
 # Essence Extractor 📜✨
 
 Essence Extractor is a dynamic tool designed to transform YouTube videos into engaging and concise blog posts. This utility automates the process of downloading videos, extracting audio, transcribing speech, and generating a summary to create a ready-to-publish blog post.
