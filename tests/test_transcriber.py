@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from src.transcriber import Transcriber
+from essence_extractor.src.transcriber import Transcriber
 
 
 

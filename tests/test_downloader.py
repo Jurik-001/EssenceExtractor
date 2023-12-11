@@ -1,4 +1,4 @@
-from src.downloader import YouTubeDownloader
+from essence_extractor.src.downloader import YouTubeDownloader
 import os
 
 

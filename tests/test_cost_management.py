@@ -1,6 +1,6 @@
 from unittest.mock import patch
-from src import CostManager
-from src import utils
+from essence_extractor.src import CostManager
+from essence_extractor.src import utils
 
 
 def test_calculate_cost_token():

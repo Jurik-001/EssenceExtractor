@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 import pytest
-from src.blog_generator import BlogGenerator
+from essence_extractor.src.blog_generator import BlogGenerator
 from pydantic import ValidationError
 from tempfile import NamedTemporaryFile
 import os

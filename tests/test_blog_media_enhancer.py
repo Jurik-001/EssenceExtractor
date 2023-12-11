@@ -1,5 +1,5 @@
 from unittest.mock import patch, MagicMock
-from src.blog_media_enhancer import BlogMediaEnhancer
+from essence_extractor.src.blog_media_enhancer import BlogMediaEnhancer
 import numpy as np
 import os
 import pytest
