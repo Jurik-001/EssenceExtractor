@@ -1,4 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](https://static.pepy.tech/badge/essence-extractor)](https://pepy.tech/project/essence-extractor)
 ![GitHub issues](https://img.shields.io/github/issues/Jurik-001/EssenceExtractor)
 [![Coverage](https://codecov.io/gh/Jurik-001/EssenceExtractor/branch/master/graph/badge.svg)](https://codecov.io/gh/Jurik-001/EssenceExtractor)
 [![Python CI](https://github.com/Jurik-001/EssenceExtractor/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Jurik-001/EssenceExtractor/actions/workflows/ci.yml)
